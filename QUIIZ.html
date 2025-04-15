@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>اختبار الثقة</title>
+  <style>
+    body {
+      direction: rtl;
+      background-image: url('https://i.imgur.com/qK42fUu.jpg');
+      background-size: cover;
+      font-family: 'Arial', sans-serif;
+      background-color: pink;
+      color: white; /* ← اللون صار أبيض */
+      text-align: center;
+      padding: 20px;
+    }
+
+    h1 {
+      color: #ffffff;
+      text-shadow: 1px 1px 3px #000;
+    }
+
+    .question {
+      margin: 20px 0;
+    }
+
+    select, input[type="text"] {
+      padding: 10px;
+      font-size: 16px;
+      margin-top: 5px;
+      border-radius: 8px;
+    }
+
+    button {
+      background-color: #7b1fa2;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      font-size: 18px;
+      cursor: pointer;
+      margin-top: 20px;
+      border-radius: 10px;
+    }
+
+    .result {
+      margin-top: 30px;
+      font-size: 20px;
+      color: #ffffcc;
+      background-color: rgba(0,0,0,0.5);
+      padding: 10px;
+      border-radius: 10px;
+    }
+
+    .history {
+      margin-top: 40px;
+      background: rgba(0,0,0,0.6);
+      padding: 15px;
+      border-radius: 10px;
+      text-align: right;
+      color: white;
+    }
+
+    .history ul {
+      list-style-type: none;
+      padding-right: 0;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>🌸 اختبار الثقة 🌸</h1>
+  <h3>🌸 DESIGNED BY RAZIKA 🌸</h3>
+
+  <div class="question">
+    <label>اسمك؟</label><br>
+    <input type="text" id="username" placeholder="اكتب اسمك هنا">
+  </div>
+
+  <div class="question">
+    <label>1. نسبة حبك لي؟</label><br>
+    <select id="love">
+      <option value="">اختر</option>
+      <option value="0">0%</option>
+      <option value="25">25%</option>
+      <option value="50">50%</option>
+      <option value="75">75%</option>
+    </select>
+  </div>
+
+  <div class="question">
+    <label>2. ما هو طعامي المفضل؟</label><br>
+    <select id="food">
+      <option value="">اختر</option>
+      <option value="اندومي">إندومي</option>
+      <option value="باستا">باستا</option>
+      <option value="بيتزا">بيتزا</option>
+      <option value="اكل تقليدي">أكل تقليدي</option>
+    </select>
+  </div>
+
+  <div class="question">
+    <label>3. مسلسلاتي المفضلة؟</label><br>
+    <select id="series">
+      <option value="">اختر</option>
+      <option value="صينية">صينية</option>
+      <option value="كورية">كورية</option>
+      <option value="امريكية">أمريكية</option>
+      <option value="تركية">تركية</option>
+    </select>
+  </div>
+
+  <div class="question">
+    <label>4. كيف هي شخصيتي؟</label><br>
+    <select id="personality">
+      <option value="">اختر</option>
+      <option value="مرحة">مرحة</option>
+      <option value="فضولية">فضولية</option>
+      <option value="متطفلة">متطفلة</option>
+      <option value="مزاجية">مزاجية</option>
+    </select>
+  </div>
+
+  <div class="question">
+    <label>5. كيف ترى مستقبلي كمصممة برامج؟</label><br>
+    <select id="future">
+      <option value="">اختر</option>
+      <option value="جيد جدا">جيد جدًا</option>
+      <option value="جيد">جيد</option>
+      <option value="عادي">عادي</option>
+      <option value="ضعيف">ضعيف</option>
+    </select>
+  </div>
+
+  <button onclick="checkAnswers()">تحقق من الإجابات</button>
+  <button onclick="resetQuiz()">🔁 إعادة المحاولة</button>
+  <button onclick="clearResults()">🗑️ مسح النتائج</button>
+
+
+  <div class="result" id="result"></div>
+
+  <div class="history" id="history">
+    <h3>📋 نتائج سابقة:</h3>
+    <ul id="historyList"></ul>
+  </div>
+
+  <script>
+    let results = [];
+
+    // تحميل النتائج من localStorage
+    window.onload = function () {
+      const saved = localStorage.getItem("results");
+      if (saved) {
+        results = JSON.parse(saved);
+        updateHistory();
+      }
+    };
+
+    function checkAnswers() {
+      let score = 0;
+      const total = 5;
+
+      const username = document.getElementById("username").value.trim();
+      if (!username) {
+        alert("من فضلك أدخل اسمك أولاً.");
+        return;
+      }
+
+      if (document.getElementById("love").value == "75") score++;
+      if (document.getElementById("food").value == "اندومي") score++;
+      if (document.getElementById("series").value == "كورية") score++;
+      if (document.getElementById("personality").value == "مرحة") score++;
+      if (document.getElementById("future").value == "جيد جدا") score++;
+
+      const percentage = Math.round((score / total) * 100);
+      const message = percentage === 100 ? "أنت تعرفني تمامًا! 😍" : "جرب مرة أخرى لتعرفني أكثر 💭";
+
+      document.getElementById("result").innerHTML =
+        `✅ نتيجتك يا ${username}: ${percentage}% - ${message}`;
+
+      results.push(`${username} - ${percentage}%`);
+      localStorage.setItem("results", JSON.stringify(results));
+      updateHistory();
+    }
+
+    function updateHistory() {
+      const list = document.getElementById("historyList");
+      list.innerHTML = "";
+      results.forEach(entry => {
+        const li = document.createElement("li");
+        li.textContent = entry;
+        list.appendChild(li);
+      });
+    }
+
+    function resetQuiz() {
+      document.querySelectorAll("select").forEach(s => s.value = "");
+      document.getElementById("username").value = "";
+      document.getElementById("result").innerHTML = "";
+    }
+    function clearResults() {
+  if (confirm("هل أنت متأكد أنك تريد مسح جميع النتائج؟")) {
+    results = [];
+    localStorage.removeItem("results");
+    updateHistory();
+    alert("تم مسح النتائج بنجاح.");
+  }
+}
+
+  </script>
+
+</body>
+</html>
